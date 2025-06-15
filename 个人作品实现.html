@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集 - [赵泽旭]</title>
+    <style>
+        /* === Google Fonts  === */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+
+        /* * ===============================================
+         * THEMES.CSS CONTENT
+         * ===============================================
+         */
+        
+        /* --- 默认 (明亮) 主题 --- */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --text-emphasis: #000000;
+            --border-color: #dee2e6;
+            --accent-color: #007bff;
+            --accent-color-darker: #0056b3;
+            --accent-color-translucent: rgba(0, 123, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+        }
+
+        /* --- 暗黑主题 (当 #theme-toggle 被选中时生效) --- */
+        .theme-toggle-checkbox:checked ~ .page-container {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-emphasis: #ffffff;
+            --border-color: #3a3a3a;
+            --accent-color: #3391ff;
+            --accent-color-darker: #55aaff;
+            --accent-color-translucent: rgba(51, 145, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- 主题切换器样式 --- */
+        .theme-switch {
+            cursor: pointer;
+            font-size: 1.5rem;
+            user-select: none;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-switch:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        
+        
+        /* === 全局和基础样式 === */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* === 头部与导航 === */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.4s ease;
+        }
+
+        /* === Logo样式  === */
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .logo-img {
+            height: 50px; /* 控制Logo大小 */
+            width: auto;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .logo:hover .logo-img {
+            transform: scale(1.1) rotate(-8deg); /* 添加悬停效果 */
+        }
+
+        /* 导航标签样式  */
+        .main-nav label {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 400;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .main-nav label:hover {
+            color: var(--text-emphasis);
+            background-color: var(--bg-tertiary);
+        }
+        
+        /* 为当前选中的页面标签添加 'active' 样式 */
+        #page-nav-home:checked ~ .page-container .main-nav .nav-label-home,
+        #page-nav-portfolio:checked ~ .page-container .main-nav .nav-label-portfolio,
+        #page-nav-contact:checked ~ .page-container .main-nav .nav-label-contact {
+             color: var(--text-emphasis);
+             background-color: var(--bg-tertiary);
+        }
+
+
+        /* === 移动端汉堡菜单 === */
+        .hamburger-menu {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 1.8rem;
+            height: 1.5rem;
+            cursor: pointer;
+            z-index: 110;
+        }
+        .hamburger-menu .bar {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-primary);
+            border-radius: 3px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .main-nav {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+        .main-nav label {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .main-nav label:last-child {
+            border-bottom: none;
+        }
+        .menu-toggle-checkbox:checked ~ .page-container .main-header .main-nav {
+            display: flex;
+        }
+        .menu-toggle-checkbox:checked ~ .page-container .main-header .hamburger-menu .bar:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+        .menu-toggle-checkbox:checked ~ .page-container .main-header .hamburger-menu .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle-checkbox:checked ~ .page-container .main-header .hamburger-menu .bar:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+
+        /* === 页面切换核心逻辑 === */
+        .page-content {
+            display: none; /* 默认隐藏所有页面内容 */
+        }
+        
+        /* 根据选中的单选框来显示对应的页面 */
+        #page-nav-home:checked ~ .page-container main #page-home-content,
+        #page-nav-portfolio:checked ~ .page-container main #page-portfolio-content,
+        #page-nav-contact:checked ~ .page-container main #page-contact-content {
+            display: block;
+        }
+
+        /* === 作品集网格布局 === */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        /* 项目卡片链接样式 */
+        .project-card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .project-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 12px 24px var(--shadow-color);
+        }
+        .project-image { width: 100%; height: auto; display: block; }
+        .project-content { padding: 1.5rem; flex-grow: 1; }
+        .project-title { margin-top: 0; color: var(--text-emphasis); }
+        .project-tag {
+            display: inline-block;
+            background-color: var(--accent-color-translucent);
+            color: var(--accent-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* === 联系表单 === */
+        .contact-container { display: flex; flex-direction: column; gap: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 700; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-color-translucent);
+        }
+        .contact-info a { color: var(--accent-color); text-decoration: none; }
+        .contact-info a:hover { text-decoration: underline; }
+
+        /* === 通用组件 === */
+        .section-title { font-size: 2.5rem; color: var(--text-emphasis); text-align: center; margin-bottom: 1rem; }
+        .section-subtitle { text-align: center; margin-top: 0; margin-bottom: 3rem; font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin-left: auto; margin-right: auto; }
+        .cta-button, .submit-button {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #fff;
+            padding: 0.8rem 1.8rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+        .cta-button:hover, .submit-button:hover {
+            transform: scale(1.05);
+            background: var(--accent-color-darker);
+        }
+        
+        /* === 页脚 === */
+        .main-footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        
+        /* === 桌面端响应式布局 (min-width: 768px) === */
+        @media (min-width: 768px) {
+            main { padding: 4rem 2rem; }
+            .hamburger-menu { display: none; }
+            .main-nav {
+                display: flex;
+                flex-direction: row;
+                position: static;
+                width: auto;
+                background-color: transparent;
+                border: none;
+                padding: 0;
+            }
+            .main-nav label { border: none; }
+            .portfolio-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+            .contact-container { flex-direction: row; align-items: flex-start; }
+            .contact-form { flex: 2; }
+            .contact-info { flex: 1; margin-top: 2.75rem; }
+        }
+
+        /* * ===============================================
+         * ANIMATIONS.CSS CONTENT
+         * ===============================================
+         */
+
+        @keyframes slideInFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .slide-in-fade-in { animation: slideInFadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards; }
+        
+        #page-home-content .avatar { animation: popIn 0.6s ease-out forwards; }
+        #page-home-content .intro-title { animation: slideInFadeIn 0.7s ease-out 0.2s forwards; opacity: 0; }
+        #page-home-content .intro-subtitle { animation: slideInFadeIn 0.7s ease-out 0.4s forwards; opacity: 0; }
+        #page-home-content .intro-description { animation: slideInFadeIn 0.7s ease-out 0.6s forwards; opacity: 0; }
+        #page-home-content .cta-button { animation: popIn 0.5s ease-out 0.8s backwards; }
+
+    </style>
+</head>
+<body>
+    <!-- 控制器: 用于页面切换和主题切换的隐藏输入框 -->
+    <input type="radio" name="page-switcher" id="page-nav-home" checked hidden>
+    <input type="radio" name="page-switcher" id="page-nav-portfolio" hidden>
+    <input type="radio" name="page-switcher" id="page-nav-contact" hidden>
+    <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox" hidden>
+    <input type="checkbox" id="menu-toggle" class="menu-toggle-checkbox" hidden>
+
+    <!-- 整个页面的容器，用于主题切换和选择器定位 -->
+    <div class="page-container">
+        <!-- 全局头部 -->
+        <header class="main-header">
+            <!-- Logo -->
+            <label for="page-nav-home" class="logo">
+                <img src="./图片和音视频素材/Gengar-logo.jpg" alt="耿鬼头像Logo" class="logo-img">
+            </label>
+            
+            <!-- 汉堡菜单图标 -->
+            <label for="menu-toggle" class="hamburger-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </label>
+
+            <!-- 导航菜单 (使用label代替a标签) -->
+            <nav class="main-nav">
+                <label for="page-nav-home" class="nav-label-home">个人简介</label>
+                <label for="page-nav-portfolio" class="nav-label-portfolio">作品展示</label>
+                <label for="page-nav-contact" class="nav-label-contact">联系方式</label>
+            </nav>
+
+            <!-- 主题切换开关 -->
+            <label for="theme-toggle" class="theme-switch">🌓</label>
+        </header>
+
+        <!-- 页面主内容 -->
+        <main>
+            <!-- 页面1：个人简介 -->
+            <section id="page-home-content" class="page-content">
+                 <div class="intro-section">
+                    <img src="./图片和音视频素材/Gengar-images.jpg" alt="个人头像" class="avatar">
+                    <h1 class="intro-title">你好，我是 赵泽旭</h1>
+                    <p class="intro-subtitle">一位穿梭于代码与像素间的虚拟现实建造者。左手优化渲染管线，对抗眩晕，提升VR舒适度；右手设计交互与内容，塑造引人入胜的虚拟体验。<br>
+                        我的使命：让技术隐形，让体验升华，推动虚拟现实真正成为人类感知的延伸。</p>
+                    <p class="intro-description">
+                        消弭眩晕，方见宇宙真容。
+                    </p>
+                    <label for="page-nav-portfolio" class="cta-button">探索我的作品</label>
+                </div>
+            </section>
+
+            <!-- 页面2：作品展示 -->
+            <section id="page-portfolio-content" class="page-content">
+                <h2 class="section-title slide-in-fade-in">我的作品集</h2>
+                <div class="portfolio-grid">
+                    <!-- 作品卡片 1 -->
+                    <a href="./电商产品组件.html" target="_blank" class="project-card-link">
+                        <div class="project-card pop-in">
+                            <img src="./图片和音视频素材/电商组件页面.png" alt="项目一预览图" class="project-image">
+                            <div class="project-content">
+                                <h3 class="project-title">项目一：电商产品组件</h3>
+                                <p>太牛了，怎么会有这么厉害的项目呢？</p>
+                                <span class="project-tag">HTML</span> <span class="project-tag">CSS</span>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 作品卡片 2 -->
+                    <a href="./相关信息.html" target="_blank" class="project-card-link">
+                        <div class="project-card pop-in" style="animation-delay: 0.1s;">
+                            <img src="./图片和音视频素材/肖邦网页 .png" alt="项目二预览图" class="project-image">
+                            <div class="project-content">
+                                <h3 class="project-title">项目二：肖邦介绍网页</h3>
+                                <p>生活过的好悲伤，我在雨中拉肖邦。</p>
+                                <span class="project-tag">音乐家</span> <span class="project-tag">CSS</span>
+                            </div>
+                        </div>
+                    </a>    
+                    <!-- 作品卡片 3 -->
+                    <a href="./个人作品实现.html" target="_blank" class="project-card-link">
+                        <div class="project-card pop-in" style="animation-delay: 0.2s;">
+                            <img src="./图片和音视频素材/个人网站界面.png" alt="项目三预览图" class="project-image">
+                            <div class="project-content">
+                                <h3 class="project-title">项目三：个人网页</h3>
+                                <p>就是当前你浏览的这个网站，自己看。</p>
+                                <span class="project-tag">CSS</span> <span class="project-tag">非常牛的设计</span>
+                            </div>
+                        </div>
+                    </a>    
+                </div>
+            </section>
+
+            <!-- 页面3：联系方式 -->
+            <section id="page-contact-content" class="page-content">
+                <h2 class="section-title slide-in-fade-in">与我联系</h2>
+                <p class="section-subtitle">期待与您交流！请填写下面的表单，或通过其他方式联系我。</p>
+                <div class="contact-container">
+                    <form class="contact-form" action="#" method="POST">
+                        <div class="form-group"><label for="name">您的姓名</label><input type="text" id="name" name="name" required></div>
+                        <div class="form-group"><label for="email">您的邮箱</label><input type="email" id="email" name="email" required></div>
+                        <div class="form-group"><label for="message">您的留言</label><textarea id="message" name="message" rows="5" required></textarea></div>
+                        <button type="submit" class="submit-button">发送消息</button>
+                    </form>
+                    <div class="contact-info">
+                        <h3>其他联系方式</h3>
+                        <p><strong>Google邮箱:</strong> b.powerfu1z720@gmail.com</p>
+                        <p><strong>GitHub:</strong> github.com/Takuakira</p>
+                        <p><strong>QQ邮箱:</strong> 2027025657@qq.com</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 全局页脚 -->
+        <footer class="main-footer">
+            <p>&copy; 2025 [赵泽旭]. 版权所有.</p>
+        </footer>
+    </div>
+</body>
+</html>
